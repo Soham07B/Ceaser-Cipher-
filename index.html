@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background-color: #0d0d0d;
+            color: #00bfff; /* Sky Blue Text */
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 191, 255, 0.2);
+            margin: auto;
+            text-align: center;
+            border: 2px solid #00bfff;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffdd57; /* Yellow */
+            text-shadow: 0px 0px 10px #ffdd57;
+        }
+
+        label {
+            font-size: 14px;
+            color: #66ccff; /* Light Blue */
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        select, textarea, input {
+            width: 100%;
+            background: black;
+            color: #00ffff; /* Cyan */
+            font-size: 16px;
+            border: 1px solid #00bfff;
+            padding: 10px;
+            border-radius: 5px;
+            transition: 0.2s;
+            font-family: 'Source Code Pro', monospace;
+            margin-top: 5px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+
+        select:focus, textarea:focus, input:focus {
+            outline: none;
+            border-color: #66ccff;
+            box-shadow: 0px 0px 5px #66ccff;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        button {
+            width: 110px;
+            background: #ffdd57; /* Yellow */
+            color: black;
+            font-size: 14px;
+            padding: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ffcc33;
+            transform: scale(1.05);
+        }
+
+        #result {
+            font-size: 16px;
+            font-weight: 500;
+            color: #ffdd57; /* Yellow */
+            background: black;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ffdd57;
+            margin-top: 15px;
+            text-shadow: 0px 0px 5px #ffdd57;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Caesar Cipher Tool</h1>
+
+        <label for="mode">Mode:</label>
+        <select id="mode">
+            <option value="encrypt">Encrypt 🛡️</option>
+            <option value="decrypt">Decrypt 🔓</option>
+        </select>
+
+        <label for="message">Message:</label>
+        <textarea id="message" placeholder="Enter your text..."></textarea>
+
+        <label for="shift">Shift Key:</label>
+        <input type="number" id="shift" min="1" max="25" value="3">
+
+        <div class="button-container">
+            <button onclick="processCipher()">Process</button>
+        </div>
+
+        <div id="result">Result will appear here</div>
+    </div>
+
+    <script>
+        function caesarCipher(str, shift, encrypt = true) {
+            const alphabet = "abcdefghijklmnopqrstuvwxyz";
+            shift = encrypt ? shift : -shift;
+            let result = "";
+
+            for (let char of str) {
+                let lowerChar = char.toLowerCase();
+                if (alphabet.includes(lowerChar)) {
+                    let newIndex = (alphabet.indexOf(lowerChar) + shift) % 26;
+                    if (newIndex < 0) newIndex += 26;
+                    let newChar = alphabet[newIndex];
+                    result += char === char.toUpperCase() ? newChar.toUpperCase() : newChar;
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+
+        function processCipher() {
+            let mode = document.getElementById("mode").value;
+            let message = document.getElementById("message").value;
+            let shift = parseInt(document.getElementById("shift").value);
+
+            if (!message.trim()) {
+                document.getElementById("result").innerText = "Please enter a message.";
+                return;
+            }
+
+            let isEncrypt = mode === "encrypt";
+            let output = caesarCipher(message, shift, isEncrypt);
+            document.getElementById("result").innerText = output;
+        }
+
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                processCipher();
+            }
+        });
+    </script>
+
+</body>
+</html>
